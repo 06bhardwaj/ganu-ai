@@ -39,7 +39,7 @@ export default function DashboardPage() {
 
   if (status === 'loading') {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-[#020617] text-white">
+      <div className="h-screen flex flex-col items-center justify-center bg-background text-foreground">
         <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin mb-4"></div>
         <p className="text-slate-400 animate-pulse">Initializing your secure dashboard...</p>
       </div>
@@ -47,7 +47,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       <Navbar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">

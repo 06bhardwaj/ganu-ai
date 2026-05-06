@@ -6,18 +6,18 @@ A production-level AI chatbot website built with Next.js, TypeScript, Tailwind C
 
 - **Futuristic UI**: Premium dark-themed design with golden-orange highlights and smooth animations.
 - **Authentication**: Secure JWT-based authentication using NextAuth.js (Sign up, Login, Forgot Password).
-- **Intelligent Chat**: Real-time messaging with OpenAI integration and context-aware memory.
+- **Intelligent Chat**: Real-time messaging with **Pollinations.ai** integration for free, unlimited, and context-aware responses.
 - **User Dashboard**: Analytics, recent chats, and account management.
-- **Admin Panel**: User management, system health monitoring, and usage analytics.
-- **Security**: Middleware-based route protection and API rate limiting.
+- **Admin Panel**: User management, system health monitoring, and data export features.
+- **Security**: Custom `proxy.ts` route protection and API rate limiting.
 - **Responsive**: Fully optimized for mobile, tablet, and desktop devices.
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 15 (App Router), Tailwind CSS, Framer Motion, Lucide React.
+- **Frontend**: Next.js 16 (App Router), Tailwind CSS 4, Framer Motion, Lucide React.
 - **Backend**: Next.js API Routes, NextAuth.js, Mongoose.
 - **Database**: MongoDB (Atlas or local).
-- **AI**: OpenAI API.
+- **AI**: Pollinations.ai (Zero-Cost, Public Interest API).
 
 ## 🏁 Getting Started
 
@@ -34,8 +34,8 @@ Create a `.env.local` file in the root directory and add the following:
 MONGODB_URI=your_mongodb_connection_string
 NEXTAUTH_SECRET=your_random_secret
 NEXTAUTH_URL=http://localhost:3000
-OPENAI_API_KEY=your_openai_api_key
 ```
+*(Note: No AI API key is required as we use the public Pollinations API!)*
 
 ### 3. Installation
 ```bash

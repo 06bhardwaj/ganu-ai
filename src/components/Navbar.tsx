@@ -5,70 +5,79 @@ import { useSession, signOut } from 'next-auth/react';
 import { Bot, User, LogOut, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ThemeToggle } from './ThemeToggle';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass">
+    <nav className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-xl border-b border-white/5">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2 group">
-              <div className="p-2 bg-accent rounded-lg group-hover:scale-110 transition-transform">
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="p-2.5 bg-accent rounded-xl group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-accent/20">
                 <Bot className="w-6 h-6 text-primary" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-white to-accent bg-clip-text text-transparent">
-                Ganu AI
-              </span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black tracking-tighter text-white leading-none">
+                  GANU <span className="text-accent">AI</span>
+                </span>
+                <span className="text-[8px] font-black tracking-[0.3em] uppercase text-slate-500">Neural Net</span>
+              </div>
             </Link>
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <Link href="/#features" className="hover:text-accent px-3 py-2 transition-colors">Features</Link>
-              <Link href="/#pricing" className="hover:text-accent px-3 py-2 transition-colors">Pricing</Link>
+            <div className="ml-10 flex items-center space-x-8">
+              <Link href="/#features" className="text-sm font-black uppercase tracking-widest text-slate-400 hover:text-accent transition-all">Features</Link>
+              <Link href="/#tech" className="text-sm font-black uppercase tracking-widest text-slate-400 hover:text-accent transition-all">Infrastructure</Link>
+              
+              <div className="h-4 w-px bg-white/10 mx-2" />
+              
+              <ThemeToggle />
+
               {session ? (
-                <>
-                  <Link href="/chat" className="bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-accent-hover transition-colors">
-                    Open Chat
+                <div className="flex items-center space-x-6">
+                  <Link href="/chat" className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-6 py-2.5 rounded-xl font-black text-xs uppercase tracking-widest transition-all active:scale-95">
+                    Terminal
                   </Link>
-                  <div className="relative group ml-4 inline-block">
-                    <button className="flex items-center space-x-2 focus:outline-none">
-                      <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center border border-white/10">
-                        <User className="w-5 h-5" />
+                  <div className="relative group inline-block">
+                    <button className="flex items-center space-x-3 focus:outline-none p-1 pr-3 rounded-full hover:bg-white/5 transition-all border border-transparent hover:border-white/10">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-accent to-orange-600 flex items-center justify-center text-primary font-black shadow-lg">
+                        {session.user?.name?.charAt(0).toUpperCase()}
                       </div>
+                      <span className="text-xs font-black uppercase tracking-widest text-slate-300 group-hover:text-white">{session.user?.name?.split(' ')[0]}</span>
                     </button>
-                    <div className="absolute right-0 mt-2 w-48 glass rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all py-2 border border-white/10">
-                      <div className="px-4 py-2 text-sm border-b border-white/10 mb-2">
-                        <p className="font-medium truncate">{session.user?.name}</p>
-                        <p className="text-xs text-slate-400 truncate">{session.user?.email}</p>
+                    <div className="absolute right-0 mt-3 w-56 glass rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all py-3 border border-white/10 overflow-hidden">
+                      <div className="absolute inset-0 bg-accent/5 pointer-events-none" />
+                      <div className="px-5 py-3 border-b border-white/5 mb-2 relative">
+                        <p className="font-black text-xs text-white truncate uppercase tracking-tighter">{session.user?.name}</p>
+                        <p className="text-[10px] text-slate-500 truncate font-bold">{session.user?.email}</p>
                       </div>
-                      <Link href="/dashboard" className="block px-4 py-2 text-sm hover:bg-white/5 transition-colors">Dashboard</Link>
-                      { (session?.user as any)?.role === 'admin' ? (
-                        <Link href="/admin" className="block px-4 py-2 text-sm hover:bg-white/5 transition-colors text-accent font-bold border-t border-white/5 mt-1">Admin Panel</Link>
-                      ) : (
-                        <p className="px-4 py-2 text-[10px] text-slate-500 uppercase">Role: {(session?.user as any)?.role || 'User'}</p>
+                      <Link href="/dashboard" className="block px-5 py-2.5 text-xs font-black uppercase tracking-widest text-slate-400 hover:text-accent hover:bg-accent/5 transition-all">Command Center</Link>
+                      { (session?.user as any)?.role === 'admin' && (
+                        <Link href="/admin" className="block px-5 py-2.5 text-xs font-black uppercase tracking-widest text-accent hover:bg-accent/10 transition-all border-t border-white/5 mt-1">Admin Access</Link>
                       )}
                       <button 
                         onClick={() => signOut()}
-                        className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/5 transition-colors flex items-center space-x-2"
+                        className="w-full text-left px-5 py-2.5 text-xs font-black uppercase tracking-widest text-red-500 hover:bg-red-500/10 transition-all flex items-center space-x-3"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Sign Out</span>
+                        <span>Terminate Link</span>
                       </button>
                     </div>
                   </div>
-                </>
+                </div>
               ) : (
-                <>
-                  <Link href="/login" className="hover:text-accent px-3 py-2 transition-colors">Login</Link>
-                  <Link href="/register" className="bg-accent text-primary px-4 py-2 rounded-lg font-medium hover:bg-accent-hover transition-colors">
-                    Get Started
+                <div className="flex items-center space-x-6">
+                  <Link href="/login" className="text-sm font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all">Login</Link>
+                  <Link href="/register" className="bg-accent hover:bg-accent-hover text-primary px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-accent/20 active:scale-95">
+                    Activate Account
                   </Link>
-                </>
+                </div>
               )}
             </div>
           </div>

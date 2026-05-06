@@ -58,40 +58,46 @@ export default function ChatWidget() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            initial={{ opacity: 0, scale: 0.8, y: 40, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, scale: 0.8, y: 40, filter: 'blur(10px)' }}
+            transition={{ type: "spring", damping: 20, stiffness: 100 }}
             className={cn(
-              "glass border border-white/10 rounded-2xl shadow-2xl overflow-hidden flex flex-col mb-4",
-              isMinimized ? "h-16 w-64" : "h-[500px] w-[350px] sm:w-[400px]"
+              "glass border border-white/10 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col mb-4 relative",
+              isMinimized ? "h-20 w-72" : "h-[600px] w-[380px] sm:w-[420px]"
             )}
           >
+            {/* Animated Background for Widget */}
+            <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-accent/10 via-transparent to-cyber-blue/10" />
+            </div>
+
             {/* Header */}
-            <div className="bg-accent p-4 flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-accent" />
+            <div className="bg-accent p-5 flex items-center justify-between relative z-10 shadow-lg shadow-accent/20">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-inner shadow-white/10">
+                  <Bot className="w-6 h-6 text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-primary font-bold text-sm">Ganu Assistant</h3>
-                  <div className="flex items-center space-x-1">
-                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                    <span className="text-[10px] text-primary/70 font-medium">Online</span>
+                  <h3 className="text-primary font-black text-sm tracking-tight">GANU ASSISTANT</h3>
+                  <div className="flex items-center space-x-1.5">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]" />
+                    <span className="text-[9px] text-primary/80 font-black uppercase tracking-widest">Neural Link: Active</span>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center space-x-2">
                 <button 
                   onClick={() => setIsMinimized(!isMinimized)}
-                  className="p-1 hover:bg-primary/10 rounded transition-colors text-primary"
+                  className="p-2 hover:bg-primary/10 rounded-xl transition-all text-primary active:scale-90"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={() => setIsOpen(false)}
-                  className="p-1 hover:bg-primary/10 rounded transition-colors text-primary"
+                  className="p-2 hover:bg-primary/10 rounded-xl transition-all text-primary active:scale-90"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -99,57 +105,75 @@ export default function ChatWidget() {
             {!isMinimized && (
               <>
                 {/* Messages */}
-                <div className="flex-grow overflow-y-auto p-4 space-y-4 bg-primary/50">
+                <div className="flex-grow overflow-y-auto p-6 space-y-8 bg-[#020617]/95 relative z-10 custom-scrollbar">
                   {messages.map((msg, i) => (
-                    <div 
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: i * 0.05 }}
                       key={i} 
                       className={cn(
-                        "flex space-x-2 max-w-[85%]",
+                        "flex space-x-4 max-w-[85%]",
                         msg.role === 'user' ? "ml-auto flex-row-reverse space-x-reverse" : "mr-auto"
                       )}
                     >
                       <div className={cn(
-                        "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0",
-                        msg.role === 'user' ? "bg-accent" : "glass"
+                        "w-9 h-9 rounded-[14px] flex items-center justify-center flex-shrink-0 border shadow-lg",
+                        msg.role === 'user' ? "bg-accent border-accent/20 text-primary shadow-accent/10" : "glass border-white/10 text-accent shadow-black/20"
                       )}>
-                        {msg.role === 'user' ? <User className="w-4 h-4 text-primary" /> : <Bot className="w-4 h-4 text-accent" />}
+                        {msg.role === 'user' ? <User className="w-5 h-5" /> : <Bot className="w-5 h-5" />}
                       </div>
                       <div className={cn(
-                        "p-3 rounded-xl text-xs leading-relaxed",
-                        msg.role === 'user' ? "bg-accent/20 text-white rounded-tr-none" : "glass text-slate-200 rounded-tl-none"
+                        "p-4 rounded-[1.5rem] text-[13px] leading-relaxed shadow-2xl relative group",
+                        msg.role === 'user' 
+                          ? "bg-accent/10 border border-accent/20 text-white rounded-tr-none" 
+                          : "glass border border-white/10 text-slate-200 rounded-tl-none"
                       )}>
                         {msg.content}
+                        <div className="absolute -bottom-5 left-0 opacity-0 group-hover:opacity-40 transition-opacity text-[8px] font-black uppercase tracking-widest text-slate-500">
+                          {msg.role === 'user' ? 'Transmission Verified' : 'Neural Process'}
+                        </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                   {isLoading && (
-                    <div className="flex space-x-2 mr-auto">
-                      <div className="w-7 h-7 rounded-lg glass flex items-center justify-center">
-                        <Bot className="w-4 h-4 text-accent" />
+                    <div className="flex space-x-4 mr-auto">
+                      <div className="w-9 h-9 rounded-[14px] glass border border-white/10 flex items-center justify-center shadow-lg">
+                        <Bot className="w-5 h-5 text-accent" />
                       </div>
-                      <div className="glass p-3 rounded-xl rounded-tl-none">
-                        <Loader2 className="w-4 h-4 text-accent animate-spin" />
+                      <div className="glass border border-white/10 p-5 rounded-[1.5rem] rounded-tl-none flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:-0.3s]" />
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:-0.15s]" />
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" />
                       </div>
                     </div>
                   )}
                   <div ref={messagesEndRef} />
                 </div>
 
-                {/* Input */}
-                <form onSubmit={handleSend} className="p-3 border-t border-white/10 glass flex items-center space-x-2">
-                  <input 
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type a message..."
-                    className="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs text-white outline-none focus:border-accent/50 transition-all"
-                  />
-                  <button 
-                    disabled={!input.trim() || isLoading}
-                    className="bg-accent text-primary p-2 rounded-xl hover:bg-accent-hover transition-all disabled:opacity-50"
-                  >
-                    <Send className="w-4 h-4" />
-                  </button>
-                </form>
+                {/* Input Area */}
+                <div className="p-5 border-t border-white/5 bg-slate-900/50 backdrop-blur-3xl relative z-10">
+                  <form onSubmit={handleSend} className="relative group">
+                    <div className="absolute -inset-0.5 bg-accent/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                    <div className="relative flex items-center">
+                      <input 
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type a neural query..."
+                        className="w-full bg-slate-950/50 border border-white/10 rounded-2xl pl-5 pr-14 py-4 text-[13px] text-white outline-none focus:border-accent/50 focus:ring-4 focus:ring-accent/5 transition-all placeholder:text-slate-600 font-medium"
+                      />
+                      <button 
+                        disabled={!input.trim() || isLoading}
+                        className="absolute right-2 bg-accent text-primary p-2.5 rounded-xl hover:bg-accent-hover transition-all disabled:opacity-50 active:scale-90 shadow-lg shadow-accent/20"
+                      >
+                        {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </form>
+                  <p className="text-[8px] text-center text-slate-700 mt-4 font-black tracking-[0.3em] uppercase">
+                    Secured by Ganu Neural Net
+                  </p>
+                </div>
               </>
             )}
           </motion.div>
@@ -157,18 +181,19 @@ export default function ChatWidget() {
       </AnimatePresence>
 
       <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        whileHover={{ scale: 1.05, rotate: 5 }}
+        whileTap={{ scale: 0.95, rotate: -5 }}
         onClick={() => {
           setIsOpen(true);
           setIsMinimized(false);
         }}
         className={cn(
-          "w-14 h-14 rounded-full bg-accent flex items-center justify-center shadow-2xl shadow-accent/40 transition-all",
+          "w-16 h-16 rounded-[1.75rem] bg-accent flex items-center justify-center shadow-[0_10px_40px_-10px_rgba(245,158,11,0.5)] transition-all relative overflow-hidden group",
           isOpen && "opacity-0 pointer-events-none"
         )}
       >
-        <MessageSquare className="w-7 h-7 text-primary" />
+        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+        <MessageSquare className="w-8 h-8 text-primary relative z-10" />
       </motion.button>
     </div>
   );
